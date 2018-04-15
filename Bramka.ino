@@ -36,7 +36,7 @@ void wyslijSms(){
   Gsm.println("AT+CMGF=1\r\n");
   delay(100);
 
-  Gsm.write("AT+CMGS=\"+48513210196\"\r\n");
+  Gsm.write("AT+CMGS=\"+48xxxxxxxxxx\"\r\n");
 
   delay(100);
   Gsm.println(wiadomosc);
