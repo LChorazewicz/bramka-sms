@@ -13,7 +13,7 @@ void setup() {
 
 void loop() {
 //  if(digitalRead(PIN_AKTYWUJACY) == HIGH){
-    wyslijSms();
+    przygotujIWyslijSms();
 //  }
   while(Gsm.available()){
     Serial.write(Gsm.read());
@@ -21,27 +21,29 @@ void loop() {
   while(Serial.available()){
     Gsm.write(Serial.read());
   }
-  delay(500);
+  delay(100);
 }
 
-void wyslijSms(){
+void przygotujIWyslijSms(){
   Serial.write("\nRozpoczynam tworzenie wiadomości sms\n\n");
   
   String telefon = 
       WyswietlWiadomoscNaMonitorzePortuSzeregowegoIOczekujNaOdpowiedz("Wprowadz numer telefonu> ");
-  Serial.println(">"+telefon+"\n");
+  Serial.println("telefon>"+telefon+"\n");
   String wiadomosc = 
       WyswietlWiadomoscNaMonitorzePortuSzeregowegoIOczekujNaOdpowiedz("Wprowadz treść wiadomości> ");
-  Serial.println(">"+wiadomosc+"\n");
-  Gsm.println("AT+CMGF=1\r\n");
-  delay(100);
+  Serial.println("wiadomosc>"+wiadomosc+"\n");
 
-  Gsm.write("AT+CMGS=\"+48xxxxxxxxxx\"\r\n");
-
+  wiadomosc.trim();
+  telefon.trim();
+  
+  Gsm.print("AT+CMGF=1\r\n");
   delay(100);
-  Gsm.println(wiadomosc);
+  Gsm.print("AT+CMGS=\""+telefon+"\"\r\n");
   delay(100);
-  Gsm.write((char)26);
+  Gsm.print(wiadomosc);
+  delay(100);
+  Gsm.print((char)26);
   delay(100);
 }
 
@@ -53,12 +55,5 @@ String WyswietlWiadomoscNaMonitorzePortuSzeregowegoIOczekujNaOdpowiedz(String wi
 
 void czekajNaOdpowiedz(){
   while(Serial.available() == 0){} 
-}
-
-void writeString(String stringData) {
-  for (int i = 0; i < stringData.length(); i++)
-  {
-    Gsm.write(stringData[i]);
-  }
 }
 
